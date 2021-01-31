@@ -20,6 +20,9 @@ struct sc_thread {
 
 struct sc_mutex {
     SDL_mutex *mutex;
+#ifndef NDEBUG
+    sc_thread_id locker;
+#endif
 };
 
 struct sc_cond {
@@ -47,6 +50,14 @@ sc_mutex_unlock(struct sc_mutex *mutex);
 
 sc_thread_id
 sc_thread_get_id(void);
+
+#ifndef NDEBUG
+bool
+sc_mutex_held(struct sc_mutex *mutex);
+# define sc_mutex_assert(mutex) assert(sc_mutex_held(mutex))
+#else
+# define sc_mutex_assert(mutex)
+#endif
 
 bool
 sc_cond_init(struct sc_cond *cond);
