@@ -92,6 +92,7 @@ video_buffer_offer_decoded_frame(struct video_buffer *vb,
 
 const AVFrame *
 video_buffer_consume_rendered_frame(struct video_buffer *vb) {
+    sc_mutex_assert(&vb->mutex);
     assert(!vb->rendering_frame_consumed);
     vb->rendering_frame_consumed = true;
     fps_counter_add_rendered_frame(vb->fps_counter);
